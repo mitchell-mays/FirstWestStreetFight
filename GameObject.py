@@ -9,7 +9,7 @@ class GameObject:
     #iterating through the sprite will update the number
 
     imageLocation = ""
-    hitbox = HitBox(0, 0, 0, 0)
+    hitbox = HitBox.HitBox(0, 0, 0, 0)
     alive = True
 
     def __init__(self, l, il, hb):
@@ -19,8 +19,9 @@ class GameObject:
 
     def move(self):
         #Generic move function
-        self.location = self.location + 1
-        self.hitbox.moveX(1)
+        #self.location[0] = self.location[0] + 1
+        #self.hitbox.moveX(1)
+        x = 1
 
     def getLocation(self):
         return self.location
@@ -34,7 +35,7 @@ class GameObject:
     def isAlive(self):
         return self.alive
 
-    def draw(self):
+    def draw(self, canvas):
         #Draw method -- to implement
         x = 1
 
