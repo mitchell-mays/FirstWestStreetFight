@@ -21,7 +21,7 @@ class GameEngine:
         self.xLocEnd = windowEndX
         self.yLocEnd = windowEndY
 
-        self.preload()
+
 
         window = Tk()
         frame = Frame()
@@ -32,11 +32,22 @@ class GameEngine:
         self.canvas = Canvas(frame, width=self.WIDTH, height=self.HEIGHT, bg="white")
         self.canvas.grid(columnspan=3)
 
+        self.preload()
+
         self.canvas.focus_set()
 
     def preload(self):
-        self.Player1 = Player("Player1", 100, 25, "")
-        self.Player2 = Player("Player2", 100, 75, "")
+        photo = PhotoImage(file = 'Ken/1.gif')
+        item = self.canvas.create_image(self.WIDTH/2, self.HEIGHT/2, image=photo, tag="ken")
+
+        photo = PhotoImage(file = 'Ken/2.gif')
+        item2 = self.canvas.create_image(self.WIDTH/2, self.HEIGHT/2, image=photo, tag="ken")
+
+        self.Player1 = Player("Player1", 100, 25, "Ken/", item)
+        self.Player2 = Player("Player2", 100, 75, "Ken/", item2)
+
+
+
         self.objects.append(self.Player1)
         self.objects.append(self.Player2)
 
@@ -78,12 +89,9 @@ class GameEngine:
         obj.doCollision(obj2.getDamage())
         obj2.doCollision(obj.getDamage())
 
-        x = 0
-
     def updatePlayerMovementState(self, player, left, right, up, down, punch, kick):
         keyTotal = [left, right, up, down, punch, kick]
         while self.running:
-
             move = []
             if len(self.keyQueue) > 0:
                 distort = 0

@@ -9,10 +9,11 @@ class Player:
     moveState = -1
     jump = False
 
-    def __init__(self, n, h, loc, il):
+    def __init__(self, n, h, loc, il, drawItem):
         myHitbox = HitBox(0, 0, 25, 25)
         GameObject.__init__(self, loc, il, myHitbox)
 
+        self.canvasDrawItem = drawItem
         self.name = n
         self.health = h
 
@@ -33,7 +34,6 @@ class Player:
             vals = self.move[0].split("-")
             if vals[0] == "D":
                 moveState = vals[1]
-
 
 
     def draw(self):

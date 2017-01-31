@@ -3,6 +3,11 @@ import HitBox
 class GameObject:
 
     location = [0, 0]
+    #image location is going to be formatted like so
+    #imageLocation will hold folder name
+    #the draw function will access files that are named in these convention IDLE-1.gif
+    #iterating through the sprite will update the number
+
     imageLocation = ""
     hitbox = HitBox(0, 0, 0, 0)
     alive = True
