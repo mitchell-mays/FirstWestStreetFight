@@ -1,7 +1,5 @@
 import Player
 import GameObject
-import threading
-import keyThreading
 import time
 from tkinter import *
 
@@ -13,7 +11,7 @@ class GameEngine:
     objects = []
     xLocEnd = 200
     yLocEnd = 200
-    frameLen = 0.5
+    frameLen = 0.15
 
     keyQueue = []
 
@@ -22,8 +20,6 @@ class GameEngine:
     def __init__(self, windowEndX, windowEndY):
         self.xLocEnd = windowEndX
         self.yLocEnd = windowEndY
-
-
 
         self.window = Tk()
         self.frame = Frame()
@@ -34,10 +30,8 @@ class GameEngine:
         self.canvas.grid(columnspan=3)
 
 
-
         self.preload()
 
-        self.canvas.focus_set()
 
     def preload(self):
         photo = PhotoImage(file = self.currDir+'Ken/1.gif')
@@ -64,10 +58,18 @@ class GameEngine:
         self.frame.bind("<KeyPress>", self.keydown)
         self.frame.bind("<KeyRelease>", self.keyup)
         self.frame.pack()
+        self.canvas.focus_set()
+        self.runLoop()
+        self.window.mainloop()
+        #self.window.after(10, self.captureKeys)
+
+
+    def runLoop(self):
 
         done = False
 
-        while not done:
+        #while not done:
+        if not done:
             time.sleep(self.frameLen)
             self.updatePlayerMovementState(self.Player1, "a", "d", "w", "s", "g", "h")
             self.updatePlayerMovementState(self.Player2, "Left", "Right", "Up", "Down", "/", ".")
@@ -102,6 +104,9 @@ class GameEngine:
             #refresh what is shown
             self.window.update()
 
+
+            self.window.after(0, self.runLoop)
+
     def doCollision(self, obj, obj2):
         #run what happens when objects collide
         obj.doCollision(obj2.getDamage())
@@ -122,6 +127,7 @@ class GameEngine:
             player.setMove(move)
 
     def keydown(self, e):
+        print("here")
         if e.char == '':
             val = e.keysym
         else:
@@ -136,7 +142,6 @@ class GameEngine:
             val = e.char
 
         self.keyQueue.append("U-" + val)
-
 
 def doesCollide(hitbox1, hitbox2):
     h1Start = hitbox1.getStart()
