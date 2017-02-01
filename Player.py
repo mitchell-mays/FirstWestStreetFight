@@ -12,13 +12,14 @@ class Player(GameObject.GameObject):
     framePlace = {}
 
 
-    def __init__(self, n, h, loc, il, drawItem):
+    def __init__(self, n, h, loc, il, drawItem, pHeight):
         myHitbox = HitBox.HitBox(0, 0, 25, 25)
         GameObject.GameObject.__init__(self, loc, il, myHitbox)
 
         self.canvasDrawItem = drawItem
         self.name = n
         self.health = h
+        self.pHeight = pHeight
 
     def defineFrames(self, frames):
         self.frameDict = frames
@@ -42,6 +43,10 @@ class Player(GameObject.GameObject):
             vals = self.myMove[0].split("-")
             if vals[0] == "D":
                 moveState = vals[1]
+
+        if moveState == 0:
+            self.location[0] -= 5
+
 
 
     def isAlive(self):

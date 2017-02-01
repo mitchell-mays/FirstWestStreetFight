@@ -15,14 +15,14 @@ class GameEngine:
 
     keyQueue = []
 
-    currDir = "C:/Users/napster/PycharmProjects/FirstWestStreetFight/"
+    currDir = "C:/Users/matt/PycharmProjects/FirstWestStreetFight/"
 
     def __init__(self, windowEndX, windowEndY):
         self.xLocEnd = windowEndX
         self.yLocEnd = windowEndY
 
         self.window = Tk()
-        self.frame = Frame()
+        self.frame = Frame(self.window)
         self.frame.grid()
 
 
@@ -35,7 +35,7 @@ class GameEngine:
 
     def preload(self):
         photo = PhotoImage(file = self.currDir+'Ken/1.gif')
-        item = self.canvas.create_image(self.WIDTH/2, self.HEIGHT/2, image=photo, tag="ken")
+        item = self.canvas.create_image(0, self.HEIGHT, image=photo, tag="ken")
 
         photo = PhotoImage(file = self.currDir+'Ken/2.gif')
         item2 = self.canvas.create_image(self.WIDTH/2, self.HEIGHT/2, image=photo, tag="ken")
@@ -54,15 +54,30 @@ class GameEngine:
         self.objects.append(self.Player1)
         self.objects.append(self.Player2)
 
+    def keydown(self, e):
+        print("here")
+        if e.char == '':
+            val = e.keysym
+        else:
+            val = e.char
+
+        self.keyQueue.append("D-" + val)
+
+    def keyup(self, e):
+        if e.char == '':
+            val = e.keysym
+        else:
+            val = e.char
+
+        self.keyQueue.append("U-" + val)
+
     def start(self):
         self.frame.bind("<KeyPress>", self.keydown)
         self.frame.bind("<KeyRelease>", self.keyup)
         self.frame.pack()
-        self.canvas.focus_set()
+        self.frame.focus_set()
         self.runLoop()
         self.window.mainloop()
-        #self.window.after(10, self.captureKeys)
-
 
     def runLoop(self):
 
@@ -125,23 +140,6 @@ class GameEngine:
                     distort += 1
 
             player.setMove(move)
-
-    def keydown(self, e):
-        print("here")
-        if e.char == '':
-            val = e.keysym
-        else:
-            val = e.char
-
-        self.keyQueue.append("D-" + val)
-
-    def keyup(self, e):
-        if e.char == '':
-            val = e.keysym
-        else:
-            val = e.char
-
-        self.keyQueue.append("U-" + val)
 
 def doesCollide(hitbox1, hitbox2):
     h1Start = hitbox1.getStart()
