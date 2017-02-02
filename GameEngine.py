@@ -2,6 +2,7 @@ import Player
 import GameObject
 import time
 from tkinter import *
+from PIL import ImageTk, Image
 
 class GameEngine:
 
@@ -11,42 +12,55 @@ class GameEngine:
     objects = []
     xLocEnd = 200
     yLocEnd = 200
-    frameLen = 0.15
+    frameLen = 0.05
 
     keyQueue = []
 
+    p1StartX = 100
+    p2StartX = 800
+
     currDir = "C:/Users/napster/PycharmProjects/FirstWestStreetFight/"
 
-    def __init__(self, windowEndX, windowEndY):
+    def __init__(self, windowEndX, windowEndY, player1Name, player2Name, playerSize):
         self.xLocEnd = windowEndX
         self.yLocEnd = windowEndY
 
         self.window = Tk()
-        self.frame = Frame()
+        self.frame = Frame(self.window)
         self.frame.grid()
 
 
-        self.canvas = Canvas(self.frame, width=self.WIDTH, height=self.HEIGHT, bg="white")
+        self.canvas = Canvas(self.frame, width=self.WIDTH, height=self.HEIGHT, bg="grey")
         self.canvas.grid(columnspan=3)
 
 
-        self.preload()
+        self.preload(player1Name, player2Name, playerSize)
 
 
-    def preload(self):
-        photo = PhotoImage(file = self.currDir+'Ken/1.gif')
-        item = self.canvas.create_image(self.WIDTH/2, self.HEIGHT/2, image=photo, tag="ken")
+    def preload(self, player1, player2, pSize):
+        idles = []
+        im = Image.open(player1 + "/Idle.png")
+        resize = im.resize((4202,300), Image.ANTIALIAS)
+        for i in range(14):
+            cropped = resize.crop((i*300, 0, (i+1)*300, 300))
+            photo = ImageTk.PhotoImage(cropped)
+            idles.append(photo)
 
-        photo = PhotoImage(file = self.currDir+'Ken/2.gif')
-        item2 = self.canvas.create_image(self.WIDTH/2, self.HEIGHT/2, image=photo, tag="ken")
+        item = self.canvas.create_image(self.p1StartX, self.HEIGHT/2, image=idles[0], tag="ken")
+        item2 = self.canvas.create_image(self.p2StartX, self.HEIGHT/2, image=idles[0], tag="ken")
 
-        self.Player1 = Player.Player("Player1", 100, [25,0], self.currDir+"Ken/", item)
-        self.Player2 = Player.Player("Player2", 100, [75,0], self.currDir+"Ken/", item2)
+
+        self.Player1 = Player.Player("Player1", 100, [self.p1StartX, self.HEIGHT/2], item)
+        self.Player2 = Player.Player("Player2", 100, [self.p2StartX, self.HEIGHT/2], item2)
 
         frames = {}
-        frames["-1"] = [PhotoImage(file = self.currDir+'Ken/1.gif'), PhotoImage(file = self.currDir+'Ken/2.gif'), PhotoImage(file = self.currDir+'Ken/3.gif'), PhotoImage(file = self.currDir+'Ken/4.gif'), PhotoImage(file = self.currDir+'Ken/5.gif'), PhotoImage(file = self.currDir+'Ken/6.gif')]
-        frames["0"] = [PhotoImage(file = self.currDir+'Ken/1.gif'), PhotoImage(file = self.currDir+'Ken/2.gif'), PhotoImage(file = self.currDir+'Ken/3.gif'), PhotoImage(file = self.currDir+'Ken/4.gif'), PhotoImage(file = self.currDir+'Ken/5.gif'), PhotoImage(file = self.currDir+'Ken/6.gif')]
-        frames["1"] = [PhotoImage(file = self.currDir+'Ken/1.gif'), PhotoImage(file = self.currDir+'Ken/2.gif'), PhotoImage(file = self.currDir+'Ken/3.gif'), PhotoImage(file = self.currDir+'Ken/4.gif'), PhotoImage(file = self.currDir+'Ken/5.gif'), PhotoImage(file = self.currDir+'Ken/6.gif')]
+        frames["-1"] = idles
+        frames["0"] = idles
+        frames["1"] = idles
+        frames["2"] = idles
+        frames["3"] = idles
+        frames["4"] = idles
+        frames["5"] = idles
 
         self.Player1.defineFrames(frames)
         self.Player2.defineFrames(frames)
@@ -58,7 +72,7 @@ class GameEngine:
         self.frame.bind("<KeyPress>", self.keydown)
         self.frame.bind("<KeyRelease>", self.keyup)
         self.frame.pack()
-        self.canvas.focus_set()
+        self.frame.focus_set()
         self.runLoop()
         self.window.mainloop()
         #self.window.after(10, self.captureKeys)
@@ -84,8 +98,8 @@ class GameEngine:
                         break
 
                 obj.move()
-                if obj.location[0] < 0 or obj.location[1] < 0 or obj.location[0] > self.xLocEnd or obj.location[1] > self.xLocEnd:
-                    obj.setAlive(False)
+                #if obj.location[0] < 0 or obj.location[1] < 0 or obj.location[0] > self.xLocEnd or obj.location[1] > self.xLocEnd:
+                #    obj.setAlive(False)
 
 
             #Collision
@@ -124,10 +138,9 @@ class GameEngine:
                     del self.keyQueue[key-distort]
                     distort += 1
 
-            player.setMove(move)
+        player.setMove(move)
 
     def keydown(self, e):
-        print("here")
         if e.char == '':
             val = e.keysym
         else:
@@ -154,6 +167,5 @@ def doesCollide(hitbox1, hitbox2):
         return True
     else:
         return False
-
 
 
